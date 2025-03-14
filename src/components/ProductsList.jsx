@@ -3,6 +3,7 @@ import { useState } from "react";
 export default function ProductsList() {
   const [addedProducts, setAddedProducts] = useState([]);
 
+  // Funzione per aggiungere al carrello
   function addToCart(product) {
     setAddedProducts((prevProducts) => {
       const existingProducts = prevProducts.find(item => item.name === product.name);
@@ -13,9 +14,19 @@ export default function ProductsList() {
               : item
           );
       }
-      return [...prevProducts,{...product, quantity:1}]; 
+      return [...prevProducts, { ...product, quantity: 1 }];
     });
   }
+
+  // Funzione per rimuovere dal carrello
+  function removeFromCart(productName) {
+    setAddedProducts((prevProducts) => {
+      return prevProducts.filter(item => item.name !== productName);
+    });
+  }
+
+  // Calcolo del totale
+  const total = addedProducts.reduce((acc, product) => acc + (product.price * product.quantity), 0);
 
   const products = [
     { name: 'Mela', price: 0.5 },
@@ -46,12 +57,13 @@ export default function ProductsList() {
                 <p>Nome: {product.name}</p>
                 <p>Prezzo: {product.price}</p>
                 <p>Quantità: {product.quantity}</p>
+                <button onClick={() => removeFromCart(product.name)}>Elimina dal carrello</button>
               </li>
             ))}
           </ul>
+          <h3>Totale da pagare: €{total.toFixed(2)}</h3>
         </>
       )}
     </>
   );
 }
-
